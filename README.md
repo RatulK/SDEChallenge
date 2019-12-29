@@ -10,6 +10,12 @@ Write an interface for a data structure that can provide the moving average of t
 2. Provide an implementation for the interface
 3. Provide any additional explanation about the interface and implementation in a README file.
 
+## Coding Solution
+
+I have implemented a Circular Buffer which allows the user, given a buffer size, to get the moving average of the structure. 
+The sum of the existing numbers in the structure is saved and on every call to movingAverage(), the average is calculated and returned.
+I have implemented a Menu to run the program and see the implementation with some basic validations included. 
+
 ## Design Question
 
 Design A Google Analytic like Backend System.
