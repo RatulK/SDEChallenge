@@ -13,8 +13,13 @@ Write an interface for a data structure that can provide the moving average of t
 ## Coding Solution
 
 I have implemented a Circular Buffer which allows the user, given a buffer size, to get the moving average of the structure. 
-The sum of the existing numbers in the structure is saved and on every call to movingAverage(), the average is calculated and returned.
-I have implemented a Menu to run the program and see the implementation with some basic validations included. 
+The Circular Buffer uses a Queue as the base structure to keep track of the elements being added. Once we have reached the buffer limit, 
+the queue starts removing elements from the head of the queue and inserting at the tail to keep our moving window. 
+The sum of the existing numbers in the window is saved and on every call to movingAverage(), the average is calculated and returned.
+
+I have implemented a Menu to show an example of how to run the program and see the implementation with some basic validations included. 
+
+Run the SDEChallenge as a Java Application and follow the menu prompts to see the implementation of the project.
 
 ## Design Question
 
