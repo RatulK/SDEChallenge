@@ -10,7 +10,7 @@ Write an interface for a data structure that can provide the moving average of t
 2. Provide an implementation for the interface
 3. Provide any additional explanation about the interface and implementation in a README file.
 
-## Coding Solution
+## <span style="color:green"><u>Coding Solution</u></span>
 
 I have implemented a Circular Buffer which allows the user, given a buffer size, to get the moving average of the structure. 
 The Circular Buffer uses a Queue as the base structure to keep track of the elements being added. Once we have reached the buffer limit, 
@@ -35,18 +35,18 @@ We need to provide Google Analytic like services to our customers. Please provid
 5. Have the ability to reprocess historical data in case of bugs in the processing logic.
 
 
-## Design Solution
+## <span style="color:green"><u>Design Solution</u></span>
 
 ### High Level System Design/Architecture
 
-Refer to the Google Analytic like Backend System diagram for a high level overview. Please find the specific notes below:
+Refer to the Google Analytic like Backend System diagram for a high level overview. 
 
 #### Traffic Estimates 
 
 Write: 1 Billion click events per day equates to ~12000 events per second (~ 1B / (24hours * 3600 seconds))
 Read/Query: ~1 Million merchants check 5 times per day equates to ~60 events per second ( 5M / (24 hours * 3600 seconds))
 
-### Architecture 
+### <u>Architecture:</u>
 
 #### Load Balancer:
 
@@ -56,7 +56,7 @@ The HAProxy (High Availability Proxy) Load balancer is used is to improve the pe
 
 Spring Cloud Gateway is integrated with Netflix Eureka for Service Registry and with Hystri/Resiliency4J for Circuit Breaking. All of these components are well integrated to Spring Boot/Cloud.
 
-#### Microservices
+#### Microservices 
 
 Spring Boot is utilized for creating Microservices, both for write as well as read operations for the Google Analytic like Backend. Since each service is a separate component, we can scale them independently without scaling the entire application. This makes the microservices extremely scaleable. 
 When a failure arises, the at-risk service should still run in a degraded functionality without crashing the entire system. Hystrix Circuit-breaker will come into rescue in such failure scenarios.
@@ -71,3 +71,8 @@ In this layer, we are using the Kafka Consumer to read from the Queues and add t
 
 Apache Spark Streaming is an extension of the core Spark API that enables scalable, high-throughput, fault-tolerant stream processing of live data streams.
 In our scenario Spark streaming process Kafka data streams and adds the data to the postGres/mySQL DB for use in the read events. 
+
+#### Merchant View
+
+When a merchant accesses their portal, they go through the Load Balancer to the API Gateway and Service Registry to access the Read Service. 
+The Read Service calls the postgreSQL/mySQL tables directly to get the up to date customer analytic data.
