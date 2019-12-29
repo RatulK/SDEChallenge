@@ -33,3 +33,41 @@ We need to provide Google Analytic like services to our customers. Please provid
 3. Provide metrics to customers with at most one hour delay.
 4. Run with minimum downtime.
 5. Have the ability to reprocess historical data in case of bugs in the processing logic.
+
+
+## Design Solution
+
+### High Level System Design/Architecture
+
+Refer to the Google Analytic like Backend System diagram for a high level overview. Please find the specific notes below:
+
+#### Traffic Estimates 
+
+Write: 1 Billion click events per day equates to ~12000 events per second (~ 1B / (24hours * 3600 seconds))
+Read/Query: ~1 Million merchants check 5 times per day equates to ~60 events per second ( 5M / (24 hours * 3600 seconds))
+
+### Architecture 
+
+#### Load Balancer:
+
+The HAProxy (High Availability Proxy) Load balancer is used is to improve the performance and reliability of a server environment by distributing the workload across multiple servers. HAProxy routes the requests coming from Web/Mobile Visitor site to the Spring Cloud Gateway of the solution
+
+#### Service Registry and API Gateway
+
+Spring Cloud Gateway is integrated with Netflix Eureka for Service Registry and with Hystri/Resiliency4J for Circuit Breaking. All of these components are well integrated to Spring Boot/Cloud.
+
+#### Microservices
+
+Spring Boot is utilized for creating Microservices, both for write as well as read operations for the Google Analytic like Backend. Since each service is a separate component, we can scale them independently without scaling the entire application. This makes the microservices extremely scaleable. 
+When a failure arises, the at-risk service should still run in a degraded functionality without crashing the entire system. Hystrix Circuit-breaker will come into rescue in such failure scenarios.
+
+We use Kafka Queues to send the write events further downstream.
+
+#### Batch Layer
+
+In this layer, we are using the Kafka Consumer to read from the Queues and add the events to a MongoDB/Cassandra noSQL database to store the data for batch operations to then further ETL transform them and send it to the postGres/mySQL DB for historical data processing. This batch processing also allows us to check if there are any errors due to processing logic.
+
+#### Stream Layer
+
+Apache Spark Streaming is an extension of the core Spark API that enables scalable, high-throughput, fault-tolerant stream processing of live data streams.
+In our scenario Spark streaming process Kafka data streams and adds the data to the postGres/mySQL DB for use in the read events. 
